@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import "./styles.css";
 import Listofemploye from "./List";
 const tabledata = [
@@ -25,24 +25,27 @@ export default function App() {
   const [tableval, setTbleval] = useState([]);
   // const [list, seList] = useState([]);
 
-  const onRowclick = (e) => {
-    // console.log(e.target.value);
+  const onRowclick = (e, idd) => {
+    console.log(e.target.checked);
+    console.log(e.target.value, e.target.id, idd);
     const valueofinput = e.target.name.split(",");
-    // console.log(e.target.value, valueofinput);
-    if (e.target.value === "false") {
+    if (e.target.id == idd && e.target.checked === true) {
+      // if (e.target.value === "false") {
       var trapval = tableval.concat({
         name: valueofinput[0],
         id: valueofinput[1],
-        select: e.target.value
+        select: e.target.checked
       });
       setTbleval(trapval);
     }
+    if (e.target.id == idd && e.target.checked === false) {
+      var trapfilter = tableval.filter((val, i) => {
+        return tableval.indexOf(val) !== idd;
+      });
+      setTbleval(trapfilter);
+    }
   };
 
-  // const Listitem = useCallback(() => {
-  //   // console.log(tableval)
-  //   return listofemploye(tableval);
-  // }, [tableval]);
   console.log(tableval);
   return (
     <div className="App">
@@ -65,9 +68,11 @@ export default function App() {
                       key={i}
                       id={i}
                       type="checkbox"
-                      value={val.select}
                       name={[val.name, val.id, val.position]}
-                      onChange={(e) => onRowclick(e)}
+                      // onClick={() => {
+                      //   setChecked(!checked);
+                      // }}
+                      onChange={(e) => onRowclick(e, i)}
                     />
                   </td>
                   <td>{val.name}</td>
